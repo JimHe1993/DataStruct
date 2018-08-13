@@ -1,0 +1,77 @@
+'''
+基于链表实现队列
+'''
+
+__authors__ = 'Jim He'
+
+
+class LinkedListQueue(object):
+    class Node(object):
+        def __init__(self, e=None, next_p=None):
+            self.e = e
+            self.next_p = next_p
+
+        def __str__(self):
+            return str(self.e)
+
+    def __init__(self):
+        self.__head = None
+        self.__tail = None
+        self.__size = 0
+
+    def __str__(self):
+        if not self.__head:
+            return ''
+        ret = ''
+        node = self.__head
+        while node:
+            ret += str(node.e) + '->'
+            node = node.next_p
+        ret += 'None'
+        return ret
+
+    def get_size(self):
+        return self.__size
+
+    def is_empty(self):
+        return self.__size == 0
+
+    def enqueue(self, e):
+        if not self.__head:
+            self.__head = self.__tail = LinkedListQueue.Node(e)
+        else:
+            self.__tail.next_p = LinkedListQueue.Node(e, self.__tail.next_p)
+            self.__tail = self.__tail.next_p
+        self.__size += 1
+
+    def dequeue(self):
+        assert self.__size > 0, '队列为空'
+
+        del_node = self.__head
+        del_node_e = del_node.e
+        self.__head = del_node.next_p
+        if not self.__head:
+            self.__tail = None
+        del_node.next_p = None
+        del del_node
+        self.__size -= 1
+        return del_node_e
+
+    def get_front(self):
+        assert self.__size > 0, '队列为空'
+        return self.__head.e
+
+
+if __name__ == "__main__":
+    linked_list_queue = LinkedListQueue()
+    # print(linked_list_queue.get_size())
+    # print(linked_list_queue.is_empty())
+
+    for i in range(10):
+        linked_list_queue.enqueue(i)
+        if i % 3 == 0:
+            linked_list_queue.dequeue()
+        print(linked_list_queue)
+    print(linked_list_queue)
+    print('队首元素：', linked_list_queue.get_front())
+    print(linked_list_queue.get_size())
