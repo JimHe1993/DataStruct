@@ -1,0 +1,41 @@
+'''
+队列——基于列表
+'''
+
+__author__ = 'Jim He'
+
+
+class MyQueue(object):
+    def __init__(self):
+        self.__queue_list = []
+
+    def __str__(self):
+        return 'Front ' + str(self.__queue_list)
+
+    def get_size(self):
+        return len(self.__queue_list)
+
+    def is_empty(self):
+        return len(self.__queue_list) == 0
+
+    def enqueue(self, e):
+        self.__queue_list.append(e)
+
+    def dequeue(self):
+        assert len(self.__queue_list) > 0
+
+        return self.__queue_list.pop(0)
+
+    def get_front(self):
+        assert len(self.__queue_list) > 0
+
+        return self.__queue_list[0]
+
+
+if __name__ == "__main__":
+    queue = MyQueue()
+    for i in range(5):
+        queue.enqueue(i)
+        print(queue)
+    queue.dequeue()
+    print(queue)
