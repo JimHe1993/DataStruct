@@ -1,0 +1,117 @@
+'''
+循环队列——基于列表
+'''
+
+__author__ = 'Jim He'
+
+
+class LoopQueue(object):
+    def __init__(self, capacity):
+        self.__queue_list = [None] * (capacity + 1)
+        self.__front = 0
+        self.__tail = 0
+
+    def __str__(self):
+        return '循环队列：' + str(self.__queue_list)
+
+    def get_size(self):
+        if self.is_empty():
+            return 0
+        return self.__tail - self.__front if self.__tail > self.__front else len(
+            self.__queue_list) - self.__front + self.__tail
+
+    def is_empty(self):
+        return True if self.__front == self.__tail else False
+
+    def is_full(self):
+        return True if (self.__tail + 1) % len(self.__queue_list) == self.__front else False
+
+    def enqueue(self, e):
+        # assert not self.is_full(), '队列满'
+        if self.is_full():
+            self.__resize(2 * (len(self.__queue_list) - 1))
+        self.__queue_list[self.__tail] = e
+        self.__tail = (self.__tail + 1) % len(self.__queue_list)
+
+    def dequeue(self):
+        assert not self.is_empty(), '队列空'
+
+        e = self.__queue_list[self.__front]
+        self.__queue_list[self.__front] = None
+        self.__front = (self.__front + 1) % len(self.__queue_list)
+        if self.get_size() == (len(self.__queue_list) - 1) // 4 and (len(self.__queue_list) - 1) // 2 != 0:
+            self.__resize(len(self.__queue_list) // 2)
+        return e
+
+    def get_front(self):
+        assert not self.is_empty(), '队列空'
+
+        return self.__queue_list[self.__front]
+
+    def get_tail(self):
+        assert not self.is_empty(), '队列空'
+
+        return self.__queue_list[self.__tail - 1]
+
+    def __resize(self, capacity):
+        temp_list = [None] * (capacity + 1)
+        ii = self.__front
+        j = 0
+        while ii != self.__tail:
+            temp_list[j] = self.__queue_list[ii]
+            j += 1
+            ii = (ii + 1) % len(self.__queue_list)
+        self.__front = 0
+        self.__tail = j
+        self.__queue_list = temp_list
+
+
+if __name__ == "__main__":
+    lq = LoopQueue(8)
+    for i in range(8):
+        lq.enqueue(i)
+    print(lq)
+    print(lq.get_size())
+    lq.dequeue()
+    print(lq)
+    print(lq.get_size())
+    lq.dequeue()
+    print(lq)
+    print(lq.get_size())
+    lq.enqueue(11)
+    print(lq)
+    print(lq.get_size())
+    lq.enqueue(22)
+    print(lq)
+    print(lq.get_size())
+    lq.enqueue(33)
+    print(lq)
+    print(lq.get_size())
+
+    lq.dequeue()
+    print(lq)
+    print(lq.get_size())
+    lq.dequeue()
+    print(lq)
+    print(lq.get_size())
+    lq.dequeue()
+    print(lq)
+    print(lq.get_size())
+    lq.dequeue()
+    print(lq)
+    print(lq.get_size())
+    lq.dequeue()
+    print(lq)
+    print(lq.get_size())
+    lq.dequeue()
+    print(lq)
+    print(lq.get_size())
+    lq.dequeue()
+    print(lq)
+    print(lq.get_size())
+    lq.dequeue()
+    print(lq)
+    print(lq.get_size())
+    lq.dequeue()
+    print(lq)
+    print(lq.get_size())
