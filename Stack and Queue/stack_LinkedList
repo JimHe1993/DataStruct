@@ -1,0 +1,190 @@
+'''
+基于链表的栈
+'''
+
+__authors__ = 'Jim He'
+
+
+class LinkedListStack(object):
+    class LinkedList(object):
+        class Node(object):
+            def __init__(self, e=None, next_p=None):
+                self.e = e
+                self.next_p = next_p
+
+            def __str__(self):
+                return str(self.e)
+
+        def __init__(self):
+            self.__dummy_head = LinkedListStack.LinkedList.Node()
+            self.__size = 0
+
+        def __str__(self):
+            ret = ''
+            node = self.__dummy_head.next_p
+            while node:
+                ret += str(node.e) + '->'
+                node = node.next_p
+            ret += 'None'
+            return ret
+
+        def get_size(self):
+            return self.__size
+
+        def is_empty(self):
+            return self.__size == 0
+
+        def contains(self, e):
+            if not self.__dummy_head:
+                return False
+            cur = self.__dummy_head.next_p
+            while cur:
+                if cur.e == e:
+                    return True
+                else:
+                    cur = cur.next_p
+            return False
+
+        def get(self, loc):
+            '''
+            获取第 loc 位置的元素，loc 从 1 开始计数
+            :param loc: 指定的位置
+            :return: 指定位置元素
+            '''
+            assert 1 <= loc <= self.__size
+            cur = self.__dummy_head.next_p
+            for _ in range(1, loc):
+                cur = cur.next_p
+            return cur.e
+
+        def set(self, loc, e):
+            assert 1 <= loc <= self.__size
+            cur = self.__dummy_head.next_p
+            for _ in range(1, loc):
+                cur = cur.next_p
+            cur.e = e
+
+        def add_first(self, e):
+            self.__dummy_head.next_p = LinkedListStack.LinkedList.Node(
+                e, self.__dummy_head.next_p
+            )
+            self.__size += 1
+
+        def add(self, loc, e):
+            '''
+            在链表的指定位置插入元素，位置计数从 1 开始
+            :param loc: 插入位置
+            :param e: 插入元素
+            :return:
+            '''
+            assert 1 <= loc <= self.__size + 1
+            prev = self.__dummy_head
+            for _ in range(1, loc):
+                prev = prev.next_p
+            prev.next_p = LinkedListStack.LinkedList.Node(e, prev.next_p)
+            self.__size += 1
+
+        def add_last(self, e):
+            self.add(self.__size + 1, e)
+
+        def remove_first(self):
+            if not self.__dummy_head.next_p:
+                return None
+            del_node = self.__dummy_head.next_p
+            del_node_e = del_node.e
+            self.__dummy_head.next_p = del_node.next_p
+            del_node.next_p = None
+            del del_node
+            self.__size -= 1
+            return del_node_e
+
+        def remove(self, loc):
+            assert 1 <= loc <= self.__size
+            prev = self.__dummy_head
+            for _ in range(1, loc):
+                prev = prev.next_p
+            del_node = prev.next_p
+            del_node_e = del_node.e
+            prev.next_p = del_node.next_p
+            del_node.next_p = None
+            del del_node
+            self.__size -= 1
+            return del_node_e
+
+        def remove_last(self):
+            return self.remove(self.__size)
+
+        def remove_element(self, e):
+            prev = self.__dummy_head
+            while prev.next_p:
+                if prev.next_p.e == e:
+                    del_node = prev.next_p
+                    prev.next_p = del_node.next_p
+                    del_node.next_p = None
+                    del del_node
+                    self.__size -= 1
+                else:
+                    prev = prev.next_p
+
+    def __init__(self):
+        self.__stack = LinkedListStack.LinkedList()
+
+    def __str__(self):
+        return str(self.__stack)
+
+    def get_size(self):
+        return self.__stack.get_size()
+
+    def is_empty(self):
+        return self.__stack.is_empty()
+
+    def push(self, e):
+        self.__stack.add_first(e)
+
+    def pop(self):
+        return self.__stack.remove_first()
+
+    def peek(self):
+        return self.__stack.get(1)
+
+
+if __name__ == "__main__":
+    '''
+    # -----------测试链表----------- #
+    linked_list = LinkedListStack.LinkedList()
+    # print(linked_list.get_size())
+    # print(linked_list.is_empty())
+
+    for i in range(10):
+        linked_list.add_first(i)
+    print(linked_list)
+    # linked_list.add(10, 10)
+    # print(linked_list)
+    # linked_list.add_last(10)
+    # print(linked_list)
+    # print(linked_list.get(3))
+    # linked_list.set(3, 33)
+    # print(linked_list)
+    # print(linked_list.contains(33))
+    # print(linked_list.contains(333))
+    # linked_list.remove_element(33)
+    # print(linked_list)
+    # linked_list.remove_first()
+    # print(linked_list)
+    # linked_list.remove_last()
+    # print(linked_list)
+    linked_list.remove(3)
+    print(linked_list)
+    # -----------测试链表----------- #
+    '''
+    # ----------链表集合---------- #
+    linked_list_stack = LinkedListStack()
+    for i in range(10):
+        linked_list_stack.push(i)
+        if i % 3 == 0:
+            linked_list_stack.pop()
+        print(linked_list_stack)
+    print(linked_list_stack)
+    print(linked_list_stack.get_size())
+    print(linked_list_stack.peek())
+    # ----------链表集合---------- #
