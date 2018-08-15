@@ -1,0 +1,109 @@
+'''
+基于链表的队列
+'''
+
+__author__ = 'Jim He'
+
+
+class Node(object):
+    '''
+    链表节点
+    '''
+    def __init__(self, e=None, next_p=None):
+        self.e = e
+        self.next_p = next_p
+
+    def __str__(self):
+        return str(self.e)
+
+
+class LinkedListQueue(object):
+    '''
+    无虚拟头节点的链表队列
+    '''
+    def __init__(self):
+        self.__head = None
+        self.__tail = None
+        self.__size = 0
+
+    def __str__(self):
+        ret = ''
+        ret += 'head:'
+        cur = self.__head
+        while cur:
+            ret += str(cur.e)
+            ret += '->'
+            cur = cur.next_p
+        ret += str(None)
+        ret += ':tail'
+        return ret
+
+    def get_size(self):
+        return self.__size
+
+    def is_empty(self):
+        return self.__size == 0
+
+    def enqueue(self, e):
+        if not self.__head:  # 队列空
+            self.__head = self.__tail = Node(e)
+        else:
+            self.__tail.next_p = Node(e)
+            self.__tail = self.__tail.next_p
+        self.__size += 1
+
+    def dequeue(self):
+        if not self.__head:
+            return None
+        del_node = self.__head
+        self.__head = self.__head.next_p
+        if not self.__head:  # 队列结点删除完毕
+            self.__tail = None
+        del_node.next_p = None
+        del_node_e = del_node.e
+        del del_node
+        self.__size -= 1
+        return del_node_e
+
+    def get_front(self):
+        if not self.__head:
+            return None
+        return self.__head.e
+
+
+if __name__ == "__main__":
+    queue = LinkedListQueue()
+    for _ in range(10):
+        queue.enqueue(_)
+
+        if _ % 3 == 0:
+            queue.dequeue()
+        print(queue)
+
+    queue.dequeue()
+    print(queue)
+    queue.dequeue()
+    print(queue)
+    queue.dequeue()
+    print(queue)
+    queue.dequeue()
+    print(queue)
+    queue.dequeue()
+    print(queue)
+    queue.dequeue()
+    print(queue)
+    queue.dequeue()
+    print(queue)
+    queue.enqueue(11)
+    queue.enqueue(111)
+    queue.enqueue(1221)
+    queue.enqueue(13331)
+    print(queue)
+    queue.dequeue()
+    print(queue)
+    queue.enqueue(22)
+    print(queue)
+    queue.dequeue()
+    print(queue)
+    queue.enqueue(33)
+    print(queue)
