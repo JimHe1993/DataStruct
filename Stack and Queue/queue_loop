@@ -6,7 +6,7 @@ __author__ = 'Jim He'
 
 
 class LoopQueue(object):
-    def __init__(self, capacity):
+    def __init__(self, capacity=10):
         self.__queue_list = [None] * (capacity + 1)
         self.__front = 0
         self.__tail = 0
@@ -50,7 +50,8 @@ class LoopQueue(object):
 
     def get_tail(self):
         assert not self.is_empty(), '队列空'
-
+        if self.__tail == 0:
+            return self.__queue_list[len(self.__queue_list) - 1]
         return self.__queue_list[self.__tail - 1]
 
     def __resize(self, capacity):
