@@ -22,12 +22,12 @@ class MyQueue(object):
         self.__queue_list.append(e)
 
     def dequeue(self):
-        assert len(self.__queue_list) > 0
+        assert len(self.__queue_list) > 0, '队列为空'
 
         return self.__queue_list.pop(0)
 
     def get_front(self):
-        assert len(self.__queue_list) > 0
+        assert len(self.__queue_list) > 0, '队列为空'
 
         return self.__queue_list[0]
 
