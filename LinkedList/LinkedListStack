@@ -1,0 +1,45 @@
+'''
+基于链表的栈
+'''
+
+from LinkedList_dummy_head import LinkedList
+
+__author__ = 'Jim He'
+
+
+class LinkedListStack(object):
+    def __init__(self):
+        self.__linked_list_stack = LinkedList()
+
+    def __str__(self):
+        return 'Satck: top ' + str(self.__linked_list_stack)
+
+    def get_size(self):
+        return self.__linked_list_stack.get_size()
+
+    def is_empty(self):
+        return self.__linked_list_stack.is_empty()
+
+    def push(self, e):
+        self.__linked_list_stack.add_first(e)
+
+    def pop(self):
+        return self.__linked_list_stack.remove_first()
+
+    def peek(self):
+        return self.__linked_list_stack.get_first()
+
+
+if __name__ == "__main__":
+    stack = LinkedListStack()
+    for _ in range(5):
+        stack.push(_)
+    print(stack)
+    print(stack.pop(), '\n', stack)
+    print(stack.pop(), '\n', stack)
+    stack.push(33)
+    print(stack)
+    stack.push(44)
+    print(stack)
+    stack.pop()
+    print(stack)
