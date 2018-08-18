@@ -1,0 +1,104 @@
+'''
+稀疏图——邻接表
+'''
+
+__authors__ = 'Jim He'
+
+import random
+
+from read_graph import ReadGraph
+from Component import Component
+from Path import Path
+from ShortestPath import ShortestPath
+
+
+class SparseGraph(object):
+    def __init__(self, v, directed=False):
+        assert v > 0, '图不能为空'
+        self.__v = v
+        self.__e = 0
+        self.__directed = directed
+        # self.__graph = [[]] * self.__v  # 有错，不能这样初始化
+        self.__graph = []
+        for _ in range(self.__v):
+            self.__graph.append([])
+
+    def __str__(self):
+        return str(self.__graph)
+
+    def get_v(self):
+        return self.__v
+
+    def get_e(self):
+        return self.__e
+
+    def has_edge(self, v1, v2):
+        assert 0 <= v1 < self.__v and 0 <= v2 < self.__v, '顶点异常'
+        if v2 in self.__graph[v1]:
+            return True
+        return False
+
+    def add_edge(self, v1, v2):
+        assert 0 <= v1 < self.__v and 0 <= v2 < self.__v, '顶点异常'
+        if self.has_edge(v1, v2):
+            return
+        self.__graph[v1].append(v2)
+        if v1 != v2 and not self.__directed:
+            self.__graph[v2].append(v1)
+        self.__e += 1
+
+    def adj(self, vv):
+        assert 0 <= vv < self.__v, '顶点异常'
+        return self.__graph[vv]
+
+    def show(self):
+        for v in range(self.__v):
+            print('第' + str(v) + '个顶点的边：', self.adj(v))
+
+
+if __name__ == "__main__":
+    # 基础测试
+    # sparse_graph = SparseGraph(3)
+    # print(sparse_graph)
+    # print(sparse_graph.has_edge(1, 2))
+    # sparse_graph.add_edge(1, 2)
+    # sparse_graph.add_edge(1, 1)
+    # print(sparse_graph)
+
+    # 压力测试
+    # random.seed(0)
+    # sparse_graph = SparseGraph(20)
+    # for _ in range(100):
+    #     v1 = random.randint(0, 19)
+    #     v2 = random.randint(0, 19)
+    #     sparse_graph.add_edge(v1, v2)
+    # for v in range(20):  # O(E)
+    #     print('第' + str(v) + '个顶点的边：', sparse_graph.adj(v))
+
+    # 图构建
+    # sparse_graph = SparseGraph(13)
+    # read_sparse_graph = ReadGraph(sparse_graph, 'testG1.txt')
+    # sparse_graph.show()
+    # component = Component(sparse_graph)
+    # print(component.get_component())
+    # print(component.is_connected(3, 4))
+
+    # sparse_graph = SparseGraph(6)
+    # read_sparse_graph = ReadGraph(sparse_graph, 'testG22.txt')
+    # sparse_graph.show()
+    # component = Component(sparse_graph)
+    # print(component.get_component())
+    # print(component.is_connected(3, 4))
+
+    sparse_graph = SparseGraph(7)
+    read_sparse_graph = ReadGraph(sparse_graph, 'testG2.txt')
+    sparse_graph.show()
+    component = Component(sparse_graph)
+    print(component.get_component())
+    print(component.is_connected(3, 4))
+    path = Path(sparse_graph, 0)
+    print(path.path(4))
+    sp = ShortestPath(sparse_graph, 0)
+    print(sp.get_bfs())
+    s_path = sp.shortest_path(4)
+    print('最短路径：', s_path[0], '长度：', s_path[1])
