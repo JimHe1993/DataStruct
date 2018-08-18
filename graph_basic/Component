@@ -1,0 +1,43 @@
+'''
+图的连通分量
+'''
+
+__authors__ = 'Jim He'
+
+
+class Component(object):
+    def __init__(self, graph):
+        self.__graph = graph
+        self.__visited = [False] * self.__graph.get_v()  # 记录顶点是否被访问过
+        self.__component = []  # 该图中有多少个连通分量
+        self.__id = [-1] * self.__graph.get_v()  # 标记顶点是否在一个连通分量
+
+        for v in range(self.__graph.get_v()):
+            if not self.__visited[v]:  # 遍历所有未被遍历过的顶点
+                component = []
+                self.__dfs(v, component)  # 深度优先遍历顶点 V 所在的连通分量
+                self.__component.append(component)
+
+    def __dfs(self, v, component):
+        component.append(v)
+        self.__visited[v] = True
+        self.__id[v] = len(self.__component) + 1  # 同一个连通分量的顶点标识
+
+        for connected_v in self.__graph.adj(v):
+            if not self.__visited[connected_v]:
+                self.__dfs(connected_v, component)
+
+        # return  # 递归结束隐含在了上述遍历代码中，当for循环全部结束了，自然当前顶点的所有边已被遍历
+
+    def get_component(self):
+        return self.__component
+
+    def len_component(self):
+        return len(self.__component)
+
+    def is_connected(self, v1, v2):
+        return self.__id[v1] == self.__id[v2]
+
+
+if __name__ == "__main__":
+    pass
