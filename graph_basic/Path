@@ -1,0 +1,63 @@
+'''
+计算从源顶点到某一顶点的路径
+'''
+
+__authors__ = 'Jim He'
+
+
+class Path(object):
+    def __init__(self, graph, s):
+        assert 0 <= s < graph.get_v(), '源点异常'
+        self.__graph = graph
+        self.__s = s  # 源点
+        self.__visited = [False] * self.__graph.get_v()
+        self.__from = [-1] * self.__graph.get_v()  # 记录顶点的路径来源
+        # 寻路算法——深度优先
+        self.__dfs(s)
+
+    def __dfs(self, v):
+        '''
+        遍历当前顶点的所有未遍历的连接顶点
+        :param v: 当前顶点
+        :return:
+        '''
+        self.__visited[v] = True
+
+        for connected_v in self.__graph.adj(v):
+            if not self.__visited[connected_v]:
+                self.__from[connected_v] = v  # 顶点connected_v与顶点v存在路径
+                self.__dfs(connected_v)
+
+    def has_path(self, v):
+        '''
+        从源点s到顶点v是否有路径
+        :param v: 寻路顶点
+        :return: True 有路可走，反之 False
+        '''
+        # while self.__from[v] != -1:
+        #     v = self.__from[v]
+        # if v == self.__s:
+        #     return True
+        # else:
+        #     return False
+
+        # 简化版本
+        return self.__visited[v]  # 是否从s开始访问到了v
+
+    def path(self, v):
+        '''
+        源点s到顶点v的路径
+        :param v: 寻路顶点
+        :return: 可走路径，[]表示无路可走
+        '''
+        path = []
+        if self.has_path(v):
+            while self.__from[v] != -1:
+                path.append(v)
+                v = self.__from[v]
+            path.append(v)
+        return path[::-1]
+
+
+if __name__ == "__main__":
+    pass
