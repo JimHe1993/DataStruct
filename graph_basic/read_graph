@@ -1,0 +1,27 @@
+'''
+图读取——图构建
+testG1.txt & testG22.txt 第一行表示该图有多少个顶点和多少条边，之后表示右边相连的两个顶点
+'''
+
+
+class ReadGraph(object):
+    def __init__(self, graph, graph_file):
+        self.__graph = graph
+        self.__graph_file = graph_file
+        self.__v = 0
+        self.__e = 0
+        with open(self.__graph_file, 'r') as f:
+            flag = True
+            for line in f:
+                line_list = line.split(' ')
+                if flag:
+                    self.__v = int(line_list[0])
+                    self.__e = int(line_list[1])
+                    flag = False
+                    continue
+                graph.add_edge(int(line_list[0]), int(line_list[1]))
+            f.close()
+
+
+if __name__ == "__main__":
+    pass
