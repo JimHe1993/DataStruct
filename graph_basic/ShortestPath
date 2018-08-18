@@ -1,0 +1,62 @@
+'''
+图的最短路径——广度优先
+'''
+
+__authors__ = 'Jim He'
+
+
+class ShortestPath(object):
+    def __init__(self, graph, s):
+        self.__graph = graph
+        self.__s = s
+        self.__visited = [False] * self.__graph.get_v()
+        self.__from = [-1] * self.__graph.get_v()
+        self.__ord = [-1] * self.__graph.get_v()  # 记录各个顶点到源点的距离（最短）
+        self.__bfs_result = []
+
+        # 广度优先
+        self.__bfs(self.__s, self.__bfs_result)
+
+    def __bfs(self, v, res):
+        self.__visited[v] = True
+        self.__ord[v] = 0
+        queue = [v]
+        while queue:
+            cur_v = queue.pop(0)
+            res.append(cur_v)
+            for connected_v in self.__graph.adj(cur_v):
+                if not self.__visited[connected_v]:
+                    self.__visited[connected_v] = True
+                    self.__from[connected_v] = cur_v
+                    self.__ord[connected_v] = self.__ord[cur_v] + 1
+                    queue.append(connected_v)
+
+    def get_bfs(self):
+        return str(self.__bfs_result)
+
+    def has_path(self, v):
+        '''
+        源点s到顶点v是否存在路径
+        :param v: 目标顶点
+        :return: True, 存在，反之，False
+        '''
+        return self.__visited[v]
+
+    def shortest_path(self, v):
+        '''
+        源点s到顶点v的最短路径
+        :param v: 目标顶点
+        :return: 最短路径，[]表示不存在
+        '''
+        sp = []
+        if not self.has_path(v):
+            return sp
+        while self.__from[v] != -1:
+            sp.append(v)
+            v = self.__from[v]
+        sp.append(v)
+        return sp[::-1], self.__ord[sp[0]]
+
+
+if __name__ == "__main__":
+    pass
