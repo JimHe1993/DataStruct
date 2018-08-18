@@ -5,3 +5,4 @@ python版本：3.6.5
 刘宇波老师代码仓库——《算法&数据结构》：https://github.com/liuyubobobo/Play-with-Algorithms
 python编程参考代码：https://github.com/ShiveryMoon/Imooc-Algorithm-PythonEdition
 感谢刘宇波老师及@ShiveryMoon
+如有问题可以联系QQ：554784183，邮箱：jimhe1993@163.com
