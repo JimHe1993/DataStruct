@@ -1,0 +1,126 @@
+'''
+索引最小堆——基于列表实现
+'''
+
+__authors__ = 'Jim He'
+
+import random
+
+
+class IndexMinHeap(object):
+    def __init__(self, data=None):
+        if data:
+            len_data = len(data)
+            self.__size = len_data
+            self.__data = data[:]
+            self.__index = [i for i in range(len_data)]
+            for k in range((len_data - 2) // 2, -1, -1):
+                self.__shift_down(self.__data, self.__index, len_data, k)
+        else:
+            self.__data = []  # 存储的是原始数据
+            self.__index = []  # 存储的是原始数据索引——用以在堆中表征数据
+            self.__size = 0
+            # self.__reverse = []  # 存储的是原始数据索引在堆中的位置——用以快速定位堆中元素位置
+
+    def __str__(self):
+        res = []
+        for idx in self.__index:
+            res.append(self.__data[idx])
+        return str(res)
+
+    def is_empty(self):
+        return self.__size == 0
+
+    def get_size(self):
+        return self.__size
+
+    def add(self, e):
+        self.__data.append(e)
+        self.__index.append(self.__size)
+        self.__shift_up(self.__data, self.__index, self.__size)
+        self.__size += 1
+
+    def __shift_up(self, data, index, k):
+        target = data[index[k]]
+        target_index = index[k]
+        while (k - 1) // 2 >= 0:  # 首先得有父节点
+            if data[index[(k - 1) // 2]] > target:  # 父节点的值大于想要交换的结点值
+                index[k] = index[(k - 1) // 2]
+                k = (k - 1) // 2
+            else:
+                break
+        index[k] = target_index
+
+    def get_min(self):
+        if self.is_empty():
+            return None
+        if self.get_size() == 1:
+            min_e = self.__data[self.__index[0]]
+            self.__index.clear()
+            self.__size = 0
+            return min_e
+        min_e = self.__data[self.__index[0]]
+        self.__size -= 1
+        self.__index[0], self.__index[self.__size] = self.__index[self.__size], self.__index[0]
+        del self.__index[self.__size]
+        self.__shift_down(self.__data, self.__index, len(self.__index), 0)
+        return min_e
+
+    def get_min_index(self):
+        if self.is_empty():
+            return None
+        if self.get_size() == 1:
+            min_index = self.__index[0]
+            self.__index.clear()
+            self.__size = 0
+            return min_index
+        min_index = self.__index[0]
+        self.__size -= 1
+        self.__index[0], self.__index[self.__size] = self.__index[self.__size], self.__index[0]
+        del self.__index[self.__size]
+        self.__shift_down(self.__data, self.__index, len(self.__index), 0)
+        return min_index
+
+    def __shift_down(self, data, index, len_data, k):
+        target = data[index[k]]
+        target_index = index[k]
+        while 2 * k + 1 < len_data:
+            i = 2 * k + 1
+            if i + 1 < len_data and data[index[i]] > data[index[i + 1]]:
+                i = i + 1
+            if target <= data[index[i]]:
+                break
+            index[k] = index[i]
+            k = i
+        index[k] = target_index
+
+    def heap_sort(self):
+        res = []
+        while not self.is_empty():
+            res.append(self.get_min())
+        return res, self.__data, self.__index
+
+    def get_e(self, idx):
+        return self.__data[idx]
+
+    def change(self, idx, e):
+        self.__data[idx] = e
+        for i in range(len(self.__index)):
+            if self.__index[i] == idx:
+                self.__shift_down(self.__data, self.__index, len(self.__index), i)
+                self.__shift_up(self.__data, self.__index, i)
+                break
+
+
+if __name__ == "__main__":
+    # imh = IndexMinHeap([50, 98, 54, 6, 34, 66, 63, 52, 39, 62])
+    # print(imh.heap_sort())
+    # print(imh)
+
+    imh = IndexMinHeap()
+    random.seed(0)
+    for _ in range(10):
+        imh.add(random.randint(1, 100))
+    print(imh)
+    imh.change(7, 25)
+    print(imh)
