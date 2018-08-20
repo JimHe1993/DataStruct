@@ -1,0 +1,80 @@
+'''
+堆排序
+'''
+
+import time
+import pprint
+
+import MaxHeap1
+
+from TestHelper import generate_random_array, generate_nearly_ordered_array
+
+
+def heap_sort_1(aList):
+    maxheap = MaxHeap1.MaxHeap(10 ** 7)
+    for num in aList:
+        maxheap.append_heap(num)
+    print('元素个数', maxheap.len_heap())
+    for i in range(len(aList) - 1, -1, -1):
+        aList[i] = maxheap.pop_max()
+    return aList
+
+
+#  时间复杂度：O(nlogn) 空间复杂度：O(n)
+
+def heap_sort_2(aList):
+    maxheap = MaxHeap1.MaxHeap(aList)
+    print('元素个数', maxheap.len_heap())
+    for i in range(len(aList) - 1, -1, -1):
+        aList[i] = maxheap.pop_max()
+    return aList
+
+
+def __shift_down(aList, n, k):
+    # 当前k应该有孩子才开始循环， 完全二叉树中只要有左孩子就开始循环
+    while 2 * k + 1 < n:  # 左孩子不越界
+        j = 2 * k + 1  # 此轮循环中，data[k]与data[j]交换位置
+        if j + 1 < n and aList[j + 1] > aList[j]:  # 有右孩子
+            j = j + 1
+        if aList[k] >= aList[j]:
+            break  # 父结点已经满足最大堆要求了
+        aList[k], aList[j] = aList[j], aList[k]
+        k = j  # 更新需要操作的父结点
+
+
+def heap_sort_inplace(aList):
+    '''
+    一个数组就可以看成是一个堆，并且可以通过heapify过程将其构建为最大堆
+    该堆中第一个元素就是最大值，则排序过程：对于最大的元素，应该放到数组末尾位置
+    放好最大值后，考察前半部分，再建堆(shift_down)，再放次大值，依次排序
+    友情提示：数组索引从0开始，则：parent(i) = (i-1)//2, left(i) = 2*i+1, right(i) = 2*i + 2
+    heapify过程：最后一个非叶子节点 (len(aList)-1)//2
+    :param aList: 待排序数组
+    :return: 完成排序后的数组
+    '''
+    # heapify过程
+    for i in range((len(aList) - 1) // 2, -1, -1):
+        # shift_down过程
+        __shift_down(aList, len(aList), i)
+
+    # 排序过程
+    for i in range(len(aList) - 1, 0, -1):
+        aList[0], aList[i] = aList[i], aList[0]
+        __shift_down(aList, i, 0)
+    return aList
+
+
+if __name__ == '__main__':
+    # test_list = [i for i in range(100, 0, -1)]
+    test_list = generate_random_array(n=10 ** 6, start=0, end=10 ** 6)
+    print('-------------------------')
+    test_list_copy = test_list[:]
+    print('-------------------------')
+    start = time.time()
+    res_list = heap_sort_2(test_list_copy)
+    end = time.time()
+
+    # pprint.pprint('heap_sort 原始列表：\n' + str(test_list) + '\n排序完成列表：\n' + str(res_list))
+    print('heap_sort 对随机列表排序时间：', end - start)  # merge_sort 对随机列表排序时间： 6.581894636154175
+    # print('heap_sort 对有大量重复元素列表排序时间：', end - start)  # merge_sort 对有大量重复元素列表排序时间： 6.027334690093994
+    # print('heap_sort 对近乎有序列表排序时间：', end - start)  # merge_sort 对近乎有序列表排序时间： 5.4399659633636475
