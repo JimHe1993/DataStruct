@@ -1,0 +1,120 @@
+'''
+最大堆——列表实现
+'''
+
+__author__ = 'Jim He'
+
+import random
+
+
+class MaxHeap(object):
+    def __init__(self):
+        self.__heap = []
+        self.__size = 0
+
+    def __str__(self):
+        return str(self.__heap)
+
+    def get_size(self):
+        return self.__size
+
+    def is_empty(self):
+        return self.__size == 0
+
+    def __parent(self, index):
+        assert index > 0, '孩子节点索引 > 1'
+        return (index - 1) // 2
+
+    def __left_child(self, index):
+        assert 2 * index + 1 <= self.__size
+        return 2 * index + 1
+
+    def __right_child(self, index):
+        assert 2 * index + 2 <= self.__size
+        return 2 * index + 2
+
+    def add(self, e):
+        self.__heap.append(e)
+        self.__shift_up(self.__size)
+        self.__size += 1
+
+    def __shift_up(self, k):
+        target = self.__heap[k]
+        while (k - 1) // 2 >= 0 and target > self.__heap[(k - 1) // 2]:
+            self.__heap[k] = self.__heap[(k - 1) // 2]
+            k = (k - 1) // 2
+        self.__heap[k] = target
+
+    def get_max(self):
+        assert self.__size > 0, '堆为空'
+        max_e = self.__heap[0]
+        self.__heap[0], self.__heap[self.__size - 1] = self.__heap[self.__size - 1], self.__heap[0]
+        self.__size -= 1
+        self.__shift_down(0)
+        return max_e
+
+    def __shift_down(self, k):
+        target = self.__heap[k]
+        while 2 * k + 1 < self.__size:
+            i = 2 * k + 1
+            if i + 1 < self.__size and self.__heap[i] < self.__heap[i + 1]:
+                i = i + 1
+            if target >= self.__heap[i]:
+                break
+            self.__heap[k] = self.__heap[i]
+            k = i
+        self.__heap[k] = target
+
+    def replace(self, e):
+        max_e = self.__heap[0]
+        self.__heap[0] = e
+        self.__shift_down(0)
+        return max_e
+
+
+# 将n个元素插入到空堆中算法复杂度为 O(nlogn)
+# heapify 过程建堆算法复杂度为 O(n)
+def heapify(aList):
+    if not aList:
+        return
+    len_list = len(aList)
+    for i in range((len_list - 2) // 2, -1, -1):
+        __shift_down_heapify(aList, len_list, i)
+    for last in range(len(aList) - 1, 0, -1):
+        aList[last], aList[0] = aList[0], aList[last]
+        __shift_down_heapify(aList, last, 0)
+    return aList
+
+
+def __shift_down_heapify(heap, n, k):
+    target = heap[k]
+    while 2 * k + 1 < n:
+        i = 2 * k + 1
+        if i + 1 < n and heap[i + 1] > heap[i]:
+            i = i + 1
+        if target >= heap[i]:
+            break
+        heap[k] = heap[i]
+        k = i
+    heap[k] = target
+
+
+if __name__ == "__main__":
+    heap = MaxHeap()
+
+    list_heap = []
+    random.seed(0)
+    for _ in range(10):
+        x = random.randint(1, 100)
+        print(x, ', ', end='')
+        list_heap.append(x)
+        heap.add(x)
+    print()
+    print(heap)
+    res = []
+    for _ in range(10):
+        res.append(heap.get_max())
+    print('排序:\n', res[::-1])
+
+    heap_list = heapify(list_heap)
+    print(heap_list)
